@@ -64,6 +64,15 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("he-wifi-network");
 
+void PrintProgress(Time interval, Time end)
+{
+    std::cout << "." << std::flush;
+    if (Simulator::Now() + interval < end)
+        Simulator::Schedule(interval, &PrintProgress, interval, end);
+    else
+        std::cout << " done\n" << std::flush;
+}
+
 int
 main(int argc, char* argv[])
 {
@@ -515,6 +524,24 @@ main(int argc, char* argv[])
 
                 FlowMonitorHelper flowMonHelper;
                 Ptr<FlowMonitor> monitor = flowMonHelper.InstallAll();
+
+                // ── Run banner ──────────────────────────────────────────────
+                std::cout << "\n╔══════════════════════════════════════════════╗\n";
+                std::cout << "║         MIDI 2.0 Wi-Fi Latency Sim           ║\n";
+                std::cout << "╠══════════════════════════════════════════════╣\n";
+                std::cout << "║  Standard   : " << standard                                 << "\n";
+                std::cout << "║  MCS        : " << +mcs << "  (" << ossDataMode.str() << ")"<< "\n";
+                std::cout << "║  Channel    : " << width << " MHz  GI=" << gi << " ns"      << "\n";
+                std::cout << "║  Frequency  : " << frequency << " GHz"                      << "\n";
+                std::cout << "║  MIDI nodes : " << nMidi << "  (model: " << midiModel << ")"<< "\n";
+                std::cout << "║  BG nodes   : " << nBackground << "  (" << bgDataRate << ")"<< "\n";
+                std::cout << "║  Distance   : " << static_cast<double>(distance) << " m"    << "\n";
+                std::cout << "║  Sim time   : " << simulationTime.GetSeconds() << " s"      << "\n";
+                std::cout << "╚══════════════════════════════════════════════╝\n";
+                std::cout << "  Running..." << std::flush;
+                Time progressInterval = Seconds(5);
+                Simulator::Schedule(progressInterval, &PrintProgress,
+                                    progressInterval, simulationTime + clientAppStartTime);
 
                 Simulator::Stop(simulationTime + clientAppStartTime);
                 Simulator::Run();
