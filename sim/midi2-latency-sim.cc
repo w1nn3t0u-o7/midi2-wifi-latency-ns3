@@ -335,7 +335,7 @@ main(int argc, char* argv[])
                 if (is80Plus80)
                     channelStr += std::string(";") + channelStr;
 
-                Ssid ssid = Ssid("ns3-80211ax");
+                Ssid ssid = Ssid("ns3-MIDI");
 
                 if (phyModel == "Spectrum")
                 {
@@ -471,16 +471,14 @@ main(int argc, char* argv[])
                     ApplicationContainer clientApp;
 
                     if (midiModel == "onoff") {
-                        // OnOff: models performer playing phrases (~1s) with rests (~0.5s)
-                        // DataRate = 32B * 500pkt/s = 64000bps during ON bursts
                         OnOffHelper midiOnoff("ns3::UdpSocketFactory",
                                               InetSocketAddress(apNodeInterface.GetAddress(0), midiPort));
                         midiOnoff.SetAttribute("OnTime",
-                                               StringValue("ns3::ExponentialRandomVariable[Mean=1.0]"));
+                                               StringValue("ns3::ExponentialRandomVariable[Mean=0.7]"));
                         midiOnoff.SetAttribute("OffTime",
-                                               StringValue("ns3::ExponentialRandomVariable[Mean=0.5]"));
-                        midiOnoff.SetAttribute("DataRate", DataRateValue(DataRate("128000bps")));
-                        midiOnoff.SetAttribute("PacketSize", UintegerValue(16));
+                                               StringValue("ns3::ExponentialRandomVariable[Mean=0.3]"));
+                        midiOnoff.SetAttribute("DataRate", DataRateValue(DataRate("30667bps")));
+                        midiOnoff.SetAttribute("PacketSize", UintegerValue(92));
                         clientApp = midiOnoff.Install(midiNodes.Get(i));
                         streamNumber += midiOnoff.AssignStreams(midiNodes.Get(i), streamNumber);
                     } else {
@@ -539,7 +537,7 @@ main(int argc, char* argv[])
                 std::cout << "║  Sim time   : " << simulationTime.GetSeconds() << " s"      << "\n";
                 std::cout << "╚══════════════════════════════════════════════╝\n";
                 std::cout << "  Running..." << std::flush;
-                Time progressInterval = Seconds(5);
+                Time progressInterval = Seconds(2);
                 Simulator::Schedule(progressInterval, &PrintProgress,
                                     progressInterval, simulationTime + clientAppStartTime);
 
