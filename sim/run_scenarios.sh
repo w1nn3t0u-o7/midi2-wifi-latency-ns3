@@ -49,16 +49,16 @@ $extra_args" 2>/dev/null)
     # Parse table rows (skip header lines, grab data rows)
     echo "$raw" | grep -E '^[0-9]+[[:space:]]' | while IFS= read -r line; do
         flow_id=$(echo "$line" | awk '{print $1}')
-        src=$(    echo "$line" | awk '{print $2}')
-        dst=$(    echo "$line" | awk '{print $3}')
-        tx=$(     echo "$line" | awk '{print $4}')
-        rx=$(     echo "$line" | awk '{print $5}')
-        lost=$(   echo "$line" | awk '{print $6}')
-        lossrate=$(echo "$line"| awk '{print $7}' | tr -d '%')
-        delay=$(  echo "$line" | awk '{print $8}')
-        jitter=$( echo "$line" | awk '{print $9}')
+        src=$(echo "$line" | awk '{print $2}')
+        dst=$(echo "$line" | awk '{print $3}')
+        tx=$(echo "$line" | awk '{print $4}')
+        rx=$(echo "$line" | awk '{print $5}')
+        lost=$(echo "$line" | awk '{print $6}')
+        lossrate=$(echo "$line" | awk '{print $7}' | tr -d '%')
+        delay=$(echo "$line" | awk '{print $8}')
+        jitter=$(echo "$line" | awk '{print $9}')
         echo "$scenario,$std,$param_name,$param_value,$rng_run,$flow_id,$src,$dst,$tx,$rx,$lost,$lossrate,$delay,$jitter"
-    done >> "$out_csv"
+    done >>"$out_csv"
 }
 
 # -----------------------------------------------------------------
@@ -66,7 +66,7 @@ $extra_args" 2>/dev/null)
 # -----------------------------------------------------------------
 echo "=== Scenario 1: Network Capacity ==="
 S1_CSV="${RESULTS_DIR}/scenario1_capacity.csv"
-echo "scenario,standard,param_name,param_value,rng_run,flow_id,src,dst,txPkts,rxPkts,lost,lossRate_pct,meanDelay_ms,jitter_ms" > "$S1_CSV"
+echo "scenario,standard,param_name,param_value,rng_run,flow_id,src,dst,txPkts,rxPkts,lost,lossRate_pct,meanDelay_ms,jitter_ms" >"$S1_CSV"
 
 for std in "${STANDARDS[@]}"; do
     for n in 1 2 4 6 8 10 12; do
@@ -84,7 +84,7 @@ echo " -> $S1_CSV"
 # -----------------------------------------------------------------
 echo "=== Scenario 2: Background Noise ==="
 S2_CSV="${RESULTS_DIR}/scenario2_background.csv"
-echo "scenario,standard,param_name,param_value,rng_run,flow_id,src,dst,txPkts,rxPkts,lost,lossRate_pct,meanDelay_ms,jitter_ms" > "$S2_CSV"
+echo "scenario,standard,param_name,param_value,rng_run,flow_id,src,dst,txPkts,rxPkts,lost,lossRate_pct,meanDelay_ms,jitter_ms" >"$S2_CSV"
 
 for std in "${STANDARDS[@]}"; do
     for bg in 0 1 2 3 5 8 10; do
@@ -102,7 +102,7 @@ echo " -> $S2_CSV"
 # -----------------------------------------------------------------
 echo "=== Scenario 3: Distance ==="
 S3_CSV="${RESULTS_DIR}/scenario3_distance.csv"
-echo "scenario,standard,param_name,param_value,rng_run,flow_id,src,dst,txPkts,rxPkts,lost,lossRate_pct,meanDelay_ms,jitter_ms" > "$S3_CSV"
+echo "scenario,standard,param_name,param_value,rng_run,flow_id,src,dst,txPkts,rxPkts,lost,lossRate_pct,meanDelay_ms,jitter_ms" >"$S3_CSV"
 
 for std in "${STANDARDS[@]}"; do
     for dist in 1 5 10 15 20 25; do
